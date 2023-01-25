@@ -1,4 +1,3 @@
-import { db } from "../database/database.js";
 import { Request, Response } from "express";
 import { rentalSchema } from "../schemas/rentalSchema.js";
 import {
@@ -8,18 +7,11 @@ import {
   paidRentalRepo,
   postRentalRepo,
 } from "../repositories/rentalRepositories.js";
+import { Rental } from "../protocols/Rental.js";
 
-export type Rental = {
-  id?: number;
-  startDate: string | Date;
-  endDate: string | Date;
-  dailyPrice: number;
-  totalPrice: number;
-  isPaid: boolean;
-  downPayment: number;
-};
 
-export async function getRentals(req: Request, res: Response) {
+
+export async function getRentals(req: Request, res: Response) : Promise<Response> {
   try {
     const rentals = await getRentalsRepo()
     if (!rentals)
@@ -30,10 +22,9 @@ export async function getRentals(req: Request, res: Response) {
   }
 }
 
-export async function postRental(req: Request, res: Response) {
-  const rental: Rental = req.body;
+export async function postRental(req: Request, res: Response) : Promise<Response> {
+  const rental = req.body as Rental;
   rental.totalPrice = res.locals.totalPrice;
-  console.log(rental)
   const { error } = rentalSchema.validate(rental, {
     abortEarly: false,
   });
@@ -51,7 +42,7 @@ export async function postRental(req: Request, res: Response) {
   }
 }
 
-export async function deleteRental(req: Request, res: Response) {
+export async function deleteRental(req: Request, res: Response) : Promise<Response> {
   const { rentalId } = req.params;
 
   try {
@@ -62,7 +53,7 @@ export async function deleteRental(req: Request, res: Response) {
   }
 }
 
-export async function paidRental(req: Request, res: Response) {
+export async function paidRental(req: Request, res: Response) : Promise<Response> {
   const { rentalId } = req.params;
 
   try {
@@ -73,10 +64,10 @@ export async function paidRental(req: Request, res: Response) {
   }
 }
 
-export async function getRentalById(req: Request, res: Response) {
+export async function getRentalById(req: Request, res: Response) : Promise<Response> {
   const { rentalId } = req.params;
   try {
-    const rental = await getRentalByIdRepo(Number(rentalId))
+    const rental  = await getRentalByIdRepo(Number(rentalId)) 
     if (!rental)
       return res.status(404).send("No rental found");
     return res.send(rental).status(200);

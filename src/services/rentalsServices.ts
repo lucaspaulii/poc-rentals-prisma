@@ -1,9 +1,8 @@
-import dayjs from "dayjs";
 import { Response, Request, NextFunction } from "express";
-import { Rental } from "../controllers/rentalsController";
+import { Rental } from "../protocols/Rental";
 
-export default function rentalsServices(req: Request, res: Response, next: NextFunction) {
-    const rental: Rental = req.body;
+export default function rentalsServices(req: Request, res: Response, next: NextFunction): void | Response {
+    const rental = req.body as Rental;
     const { startDate, endDate, dailyPrice } = rental;
 
     if (new Date(startDate) > new Date(endDate)) return res.sendStatus(400);
