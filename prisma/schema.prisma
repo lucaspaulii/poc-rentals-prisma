@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model clients {
+  id      Int       @id @default(autoincrement())
+  name    String    @db.VarChar(30)
+  email   String    @db.VarChar(30)
+  phone   String    @db.VarChar(11)
+  rentals rentals[]
+}
+
+model houses {
+  id       Int       @id @default(autoincrement())
+  address  String    @db.VarChar(30)
+  district String    @db.VarChar(30)
+  city     String    @db.VarChar(30)
+  hasAc    Boolean
+  hasPool  Boolean
+  rentals  rentals[]
+}
+
+model rentals {
+  id          Int      @id @default(autoincrement())
+  startdate   DateTime @db.Timestamp(6)
+  enddate     DateTime @db.Timestamp(6)
+  dailyprice  Int
+  totalprice  Int
+  ispaid      Boolean
+  downpayment Int
+  houseId     Int?
+  clientId    Int?
+  clients     clients? @relation(fields: [clientId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rentals_clients")
+  houses      houses?  @relation(fields: [houseId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rentals_houses")
+}
