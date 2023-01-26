@@ -1,7 +1,6 @@
 import { rentals } from "@prisma/client";
 import prisma from "../database/database.js";
-import { insertRental, Rental } from "../protocols/Rental.js";
-import rentalsServices from "../services/rentalsServices.js";
+import { insertRental } from "../protocols/Rental.js";
 
 export async function getRentalsRepo(): Promise<rentals[] | boolean> {
   const rentals = await prisma.rentals.findMany();

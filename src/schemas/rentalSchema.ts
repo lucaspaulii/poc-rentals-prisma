@@ -8,5 +8,5 @@ export const rentalSchema = Joi.object({
   ispaid: Joi.bool(),
   downpayment: Joi.number().required(),
   houseId: Joi.number().required(),
-  clientId: Joi.number().required()
+  clientId: Joi.number().required(),
 });
