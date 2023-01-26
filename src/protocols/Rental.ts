@@ -25,7 +25,7 @@ export type receivedRental = {
   startdate: string | Date;
   enddate: string | Date;
   dailyprice: number;
-  ispaid: boolean;
+  ispaid?: boolean;
   downpayment: number;
   houseId?: number;
   clientId?: number;

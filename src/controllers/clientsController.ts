@@ -52,7 +52,7 @@ export async function getClientById(
   const { clientId } = req.params;
   try {
     const client = await getClientByIdRepo(Number(clientId));
-    if (!client) return res.status(404).send("No house found for this id");
+    if (!client) return res.status(404).send("No client found for this id");
     return res.send(client).status(200);
   } catch (error) {
     return res.status(400).send(error);

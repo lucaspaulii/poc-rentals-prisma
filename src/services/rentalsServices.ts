@@ -1,20 +1,33 @@
 import { Response, Request, NextFunction } from "express";
-import { receivedRental } from "../protocols/Rental";
+import { insertRental, receivedRental } from "../protocols/Rental";
 
 export default function rentalsServices(req: Request, res: Response, next: NextFunction): void | Response {
     const rental = req.body as receivedRental;
-    const { startdate, enddate, dailyprice } = rental;
+    const { startdate, enddate, dailyprice, clientId, houseId, downpayment } = rental;
+    const ifeoj = rental.ispaid
 
-    if (new Date(startdate) > new Date(enddate)) return res.sendStatus(400);
-    if (new Date() > new Date(startdate)) return res.sendStatus(400);
+    const startdateDated = new Date(startdate);
+    const enddateDated = new Date(enddate)
+    if (startdateDated > enddateDated) return res.send(400).send("end date is greater than start date");
+    if (new Date() > startdateDated) return res.status(400).send("start date is invalid");
 
     const dayDifference = Math.ceil(
-        (new Date(enddate).getTime() - new Date(startdate).getTime()) / (1000 * 3600 * 24)
+        (enddateDated.getTime() - startdateDated.getTime()) / (1000 * 3600 * 24)
       );
     
-    const totalPrice = dailyprice * dayDifference;
+    const totalprice = dailyprice * dayDifference;
+    if (downpayment > totalprice) return res.status(400).send("down payment is greater than total price");
 
-    res.locals = {totalPrice}
+    res.locals = {
+      totalprice,
+      startdate: startdateDated,
+      enddate: enddateDated,
+      clientId,
+      houseId,
+      downpayment,
+      dailyprice,
+      ispaid: false
+    } as insertRental
 
     next();
 };

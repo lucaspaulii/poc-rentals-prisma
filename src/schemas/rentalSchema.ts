@@ -1,8 +1,8 @@
 import Joi from "joi";
 
 export const rentalSchema = Joi.object({
-  startdate: Joi.string().required(),
-  enddate: Joi.string().required(),
+  startdate: Joi.date().required(),
+  enddate: Joi.date().required(),
   dailyprice: Joi.number().required(),
   totalprice: Joi.number(),
   ispaid: Joi.bool(),

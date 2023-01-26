@@ -26,13 +26,9 @@ export async function getRentals(
 export async function postRental(
   req: Request,
   res: Response
-): Promise<Response> {
-  const rental = req.body as receivedRental;
-  const rentalToInsert = {
-    ...rental,
-    totalprice: res.locals.totalPrice,
-  } as insertRental;
-  const { error } = rentalSchema.validate(rentalToInsert, {
+): Promise<Response | void> {
+  const rental = res.locals as insertRental;
+  const { error } = rentalSchema.validate(rental, {
     abortEarly: false,
   });
 
@@ -42,7 +38,7 @@ export async function postRental(
   }
 
   try {
-    await postRentalRepo(rentalToInsert);
+    await postRentalRepo(rental);
     return res.sendStatus(201);
   } catch (error) {
     return res.status(400).send(error);

@@ -6,6 +6,7 @@ import {
   paidRental,
   postRental,
 } from "../controllers/rentalsController.js";
+import { validateRental } from "../middlewares/validateRental.js";
 import rentalsServices from "../services/rentalsServices.js";
 
 const router = Router();
@@ -14,7 +15,7 @@ router.get("/rentals", getRentals);
 
 router.get("/rental/:rentalId", getRentalById);
 
-router.post("/rental", rentalsServices, postRental);
+router.post("/rental", validateRental, rentalsServices, postRental);
 
 router.put("/rental/paid/:rentalId", paidRental);
 
