@@ -1,42 +1,47 @@
-import { QueryResult } from "pg";
-import { db } from "../database/database.js";
-import { Rental } from "../protocols/Rental.js";
+import { rentals } from "@prisma/client";
+import prisma from "../database/database.js";
+import { insertRental, Rental } from "../protocols/Rental.js";
+import rentalsServices from "../services/rentalsServices.js";
 
-export async function getRentalsRepo(): Promise<Rental[] | boolean> {
-  const rentals: QueryResult<Rental> = await db.query(`SELECT * FROM rentals`);
-  if (rentals.rows.length === 0) return false;
-  const rentalsObj = rentals.rows;
-  return rentalsObj;
+export async function getRentalsRepo(): Promise<rentals[] | boolean> {
+  const rentals = await prisma.rentals.findMany();
+  if (rentals.length === 0) return false;
+  return rentals;
 }
 
-export async function getRentalByIdRepo(id: number): Promise<Rental | boolean> {
-  const rental: QueryResult<Rental> = await db.query(
-    `SELECT * FROM rentals WHERE id=$1`,
-    [id]
-  );
-  if (rental.rows.length === 0) return false;
-  const rentalObj = rental.rows[0];
-  return rentalObj;
+export async function getRentalByIdRepo(
+  id: number
+): Promise<rentals | boolean> {
+  const rental = await prisma.rentals.findUnique({
+    where: {
+      id,
+    },
+  });
+  if (!rental) return false;
+  return rental;
 }
 
 export async function deleteRentalRepo(id: number): Promise<void> {
-  await db.query(`DELETE FROM rentals WHERE id=$1`, [id]);
+  await prisma.rentals.delete({
+    where: {
+      id,
+    },
+  });
 }
 
-export async function postRentalRepo(rental: Rental): Promise<void> {
-  await db.query(
-    `INSERT INTO rentals(startdate, enddate, dailyprice, totalprice, ispaid, downpayment) VALUES ($1, $2, $3, $4, $5, $6)`,
-    [
-      rental.startDate,
-      rental.endDate,
-      rental.dailyPrice,
-      rental.totalPrice,
-      false,
-      rental.downPayment,
-    ]
-  );
+export async function postRentalRepo(rental: insertRental): Promise<void> {
+  await prisma.rentals.create({
+    data: rental,
+  });
 }
 
 export async function paidRentalRepo(id: number): Promise<void> {
-  await db.query(`UPDATE rentals SET ispaid = true WHERE id=$1`, [id]);
+  await prisma.rentals.update({
+    where: {
+      id,
+    },
+    data: {
+      ispaid: true,
+    },
+  });
 }

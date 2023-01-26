@@ -7,7 +7,7 @@ import {
   paidRentalRepo,
   postRentalRepo,
 } from "../repositories/rentalRepositories.js";
-import { Rental } from "../protocols/Rental.js";
+import { insertRental, receivedRental, Rental } from "../protocols/Rental.js";
 
 
 
@@ -18,14 +18,15 @@ export async function getRentals(req: Request, res: Response) : Promise<Response
       return res.status(404).send("No rentals found");
     return res.send(rentals).status(200);
   } catch (error) {
+    console.log(error)
     return res.status(400).send(error);
   }
 }
 
 export async function postRental(req: Request, res: Response) : Promise<Response> {
-  const rental = req.body as Rental;
-  rental.totalPrice = res.locals.totalPrice;
-  const { error } = rentalSchema.validate(rental, {
+  const rental = req.body as receivedRental;
+  const rentalToInsert = {...rental, totalprice: res.locals.totalPrice} as insertRental
+  const { error } = rentalSchema.validate(rentalToInsert, {
     abortEarly: false,
   });
 
@@ -35,7 +36,7 @@ export async function postRental(req: Request, res: Response) : Promise<Response
   }
 
   try {
-    await postRentalRepo(rental);
+    await postRentalRepo(rentalToInsert);
     return res.sendStatus(201);
   } catch (error) {
     return res.status(400).send(error);
