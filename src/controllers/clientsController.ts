@@ -63,6 +63,7 @@ export async function deleteClient(req: Request, res: Response) : Promise<Respon
     const { clientId } = req.params;
   
     try {
+      await getClientByIdRepo(Number(clientId))
       await deleteClientRepo(Number(clientId));
       return res.sendStatus(200);
     } catch (error) {

@@ -52,6 +52,8 @@ export async function deleteRental(
   const { rentalId } = req.params;
 
   try {
+    const rental = await getRentalByIdRepo(Number(rentalId));
+    if (!rental) return res.status(404).send("No rental found for this id");
     await deleteRentalRepo(Number(rentalId));
     return res.sendStatus(200);
   } catch (error) {
@@ -66,6 +68,8 @@ export async function paidRental(
   const { rentalId } = req.params;
 
   try {
+    const rental = await getRentalByIdRepo(Number(rentalId));
+    if (!rental) return res.status(404).send("No rental found for this id");
     await paidRentalRepo(Number(rentalId));
     return res.sendStatus(200);
   } catch (error) {

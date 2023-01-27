@@ -68,6 +68,8 @@ export async function deleteHouse(
   const { houseId } = req.params;
 
   try {
+    const house = await getHouseByIdRepo(Number(houseId));
+    if (!house) return res.status(404).send("No house found for this id");
     await deleteHouseRepo(Number(houseId));
     return res.sendStatus(200);
   } catch (error) {
@@ -79,6 +81,8 @@ export async function putAc(req: Request, res: Response): Promise<Response> {
   const { houseId } = req.params;
 
   try {
+    const house = await getHouseByIdRepo(Number(houseId));
+    if (!house) return res.status(404).send("No house found for this id");
     await putAcRepo(Number(houseId));
     return res.sendStatus(200);
   } catch (error) {
@@ -90,6 +94,8 @@ export async function putPool(req: Request, res: Response): Promise<Response> {
   const { houseId } = req.params;
 
   try {
+    const house = await getHouseByIdRepo(Number(houseId));
+    if (!house) return res.status(404).send("No house found for this id");
     await putPoolRepo(Number(houseId));
     return res.sendStatus(200);
   } catch (error) {
