@@ -10,14 +10,14 @@ datasource db {
 model clients {
   id      Int       @id @default(autoincrement())
   name    String    @db.VarChar(30)
-  email   String    @db.VarChar(30)
+  email   String    @db.VarChar(30) @unique
   phone   String    @db.VarChar(11)
   rentals rentals[]
 }
 
 model houses {
   id       Int       @id @default(autoincrement())
-  address  String    @db.VarChar(30)
+  address  String    @db.VarChar(60)
   district String    @db.VarChar(30)
   city     String    @db.VarChar(30)
   hasAc    Boolean
@@ -33,8 +33,8 @@ model rentals {
   totalprice  Int
   ispaid      Boolean
   downpayment Int
-  houseId     Int?
-  clientId    Int?
+  houseId     Int
+  clientId    Int
   clients     clients? @relation(fields: [clientId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rentals_clients")
   houses      houses?  @relation(fields: [houseId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_rentals_houses")
 }

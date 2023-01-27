@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "houses" ALTER COLUMN "address" SET DATA TYPE VARCHAR(60);

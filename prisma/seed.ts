@@ -1,4 +1,4 @@
-import prisma from "../src/database/database";
+import prisma from "../src/database/database.js";
 
 async function main() {
   await prisma.clients.createMany({
@@ -26,14 +26,14 @@ async function main() {
         hasPool: true,
       },
       {
-        address: "Rua Engenheiro João Nicolau, 9950",
+        address: "Rua Eng João Nicolau, 9950",
         district: "Zona Sul",
         city: "Porto Alegre",
         hasAc: false,
         hasPool: false,
       },
       {
-        address: "Rua Desenvolvedor Lucas Pauli, 10",
+        address: "Rua Dev Lucas Pauli, 10",
         district: "Checkpoint",
         city: "Driven",
         hasAc: true,
